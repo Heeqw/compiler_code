@@ -1,0 +1,51 @@
+  A_program program;
+  A_programElementList programElementList;
+  A_programElement programElement;
+
+  A_arithExpr arithExpr;
+  A_exprUnit exprUnit; 
+  A_arithBiOpExpr arithBiOpExpr; 
+  A_arithUExpr arithUExpr; 
+
+  A_boolExpr boolExpr; 
+  A_boolUnit boolUnit; 
+  A_boolBiOpExpr boolBiOpExpr; //&& ||
+  A_boolUOpExpr boolUOpExpr; //!
+  A_comExpr comExpr; 
+  A_comOp comOp;
+  A_boolBiOp boolBiOp;
+
+  A_assignStmt assignStmt; 
+  A_leftVal leftVal;
+  A_rightVal rightVal;
+
+  A_fnCall fnCall; 
+
+  A_varDeclStmt varDeclStmt; 
+  A_varDecl varDecl; 
+  A_varDef varDef; 
+  A_varDeclScalar varDeclScalar; 
+  A_varDeclArray varDeclArray;
+  A_varDefScalar varDefScalar;
+  A_varDefArray varDefArray;
+  A_type type;
+
+  A_structDef structDef; 
+
+  A_fnDeclStmt fnDeclStmt;
+  A_fnDecl fnDecl;
+  A_paramDecl paramDecl;
+
+  A_fnDef fnDef; 
+  A_codeBlockStmt codeBlockStmt;
+  A_codeBlockStmtList codeBlockStmtList;
+  A_returnStmt returnStmt;
+  A_callStmt callStmt;
+
+  A_ifStmt ifStmt;
+  A_whileStmt whileStmt;
+
+  A_arrayExpr arrayExpr;
+  A_memberExpr memberExpr;
+  A_rightValList rightValList;
+  A_varDeclList varDeclList;
