@@ -69,7 +69,9 @@ void print_token_maps(){
     print_token_map(&funcparam_token2Type);
 }
 
-
+/*
+ *compare basic type info
+*/
 bool comp_aA_type(aA_type target, aA_type t){
     if(!target || !t)
         return false;
@@ -84,7 +86,9 @@ bool comp_aA_type(aA_type target, aA_type t){
     return true;
 }
 
-
+/*
+ *compare complete type info
+*/
 bool comp_tc_type(tc_type target, tc_type t){
     if(!target || !t)
         return false;
@@ -97,6 +101,9 @@ bool comp_tc_type(tc_type target, tc_type t){
     return comp_aA_type(target->type, t->type);
 }
 
+/*
+    compare vardeclination
+*/
 bool comp_aA_varDecl_type(aA_varDecl target, aA_varDecl t){
     if (!target || !t)
         return false;
@@ -170,8 +177,8 @@ void set_type(string name, aA_type type,int isVarArrFunc){
 }
 
 void check_return(std::ostream& out, aA_codeBlockStmt stmt, tc_type target){
-    switch (stmt->kind)
-        {
+    switch (stmt->kind){
+        // check if-else recursively
         case A_codeBlockStmtType::A_ifStmtKind:
             for (int i = 0; i < stmt->u.ifStmt->ifStmts.size(); i++){
                 check_return(out, stmt->u.ifStmt->ifStmts[i], target);
@@ -180,15 +187,17 @@ void check_return(std::ostream& out, aA_codeBlockStmt stmt, tc_type target){
                 check_return(out, stmt->u.ifStmt->elseStmts[i], target);
             }
             break;
+        // check while recursively
         case A_codeBlockStmtType::A_whileStmtKind:
             for (int i = 0; i < stmt->u.whileStmt->whileStmts.size(); i++){
                 check_return(out, stmt->u.whileStmt->whileStmts[i], target);
             }
             break;
+        // check return statement
         case A_codeBlockStmtType::A_returnStmtKind:
             if (!stmt->u.returnStmt->retVal){
                 if (!target->type){
-                    return;  //没有返回值的情况，且右值确实没有返回值
+                    return;  
                 }
                 else{
                     error_print(out,stmt->pos, "return value type doesn't match");
@@ -204,7 +213,7 @@ void check_return(std::ostream& out, aA_codeBlockStmt stmt, tc_type target){
             break;
         default:
             break;
-        }
+    }
     return;
 }
 
@@ -273,6 +282,7 @@ void check_VarDecl(std::ostream& out, aA_varDeclStmt vd)
             /* fill code here*/
             type = vdecl->u.declScalar->type;
             if (type && type->type == A_dataType::A_structTypeKind){
+                // undefined struct
                 if (struct2Members.find(*type->u.structType) == struct2Members.end()){
                     error_print(out, vdecl->u.declScalar->type->pos, "Undefined Type");
                     return;
@@ -602,6 +612,7 @@ void check_FnDef(std::ostream& out, aA_fnDef fd)
         check_return(out, stmt, ret_type);
     }
 
+    // clear local tokentype
     local_token2Type.pop_back();
 
     return;
@@ -686,7 +697,7 @@ void check_AssignStmt(std::ostream& out, aA_assignStmt as){
 
             if (!left_type->type){
                 set_type(name, right_type->type, left_type->isVarArrFunc);
-                left_type = tc_Type(right_type->type, 0);  //实际被赋值的是一个标量
+                left_type = tc_Type(right_type->type, 0);  
             }
             else{
                 left_type = tc_Type(left_type->type, 0);
@@ -825,7 +836,7 @@ void check_BoolUnit(std::ostream& out, aA_boolUnit bu){
             /* fill code here */
             tc_type left = check_ExprUnit(out, bu->u.comExpr->left);
             tc_type right = check_ExprUnit(out, bu->u.comExpr->right);
-            // 交给check_ExprUnit检查是否赋值过
+            
             if (left->isVarArrFunc != 0 || left->type->type != A_dataType::A_nativeTypeKind){
                 error_print(out, bu->u.comExpr->left->pos, "left item is not int scalar");
             }

@@ -75,9 +75,9 @@ line 15, col 8: MyStruct is not comparable with int.
 
 ---
 
-**undone!!!**
+ok
 Processing tests/04_local_global_vars.tea -> tests/04_local_global_vars.ast
-Typecheck passed!
+line 12, col 9: duplicate definition
 line 12, col 8: duplicate definition.
 
 ---
