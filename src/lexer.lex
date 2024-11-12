@@ -32,7 +32,7 @@ char* strdup(char *s, int len);
 <INITIAL>"while" { yylval.pos=A_Pos(line,col);col += yyleng;return WHILE; }
 <INITIAL>"break" { yylval.pos=A_Pos(line,col);col += yyleng;return BREAK; }
 <INITIAL>"continue" { yylval.pos=A_Pos(line,col);col += yyleng;return CONTINUE; }
-<INITIAL>"ret" { yylval.pos=A_Pos(line,col);col += yyleng;return RET; }
+<INITIAL>"ret" { yylval.pos=A_Pos(line,col);col += yyleng;return RETURN; }
 <INITIAL>"let" { yylval.pos=A_Pos(line,col);col += yyleng;return LET; }
 <INITIAL>"int" { yylval.pos=A_Pos(line,col);col += yyleng;return INT; }
 <INITIAL>"struct" { yylval.pos=A_Pos(line,col);col += yyleng;return STRUCT; }

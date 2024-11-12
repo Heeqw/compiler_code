@@ -81,7 +81,7 @@ extern int  yywrap();
 %token <pos> WHILE
 %token <pos> BREAK
 %token <pos> CONTINUE
-%token <pos> RET
+%token <pos> RETURN
 %token <pos> LET
 %token <pos> INT
 %token <pos> STRUCT
@@ -608,11 +608,11 @@ CodeBlockStmt: VarDeclStmt
 
 
 //returnStmt ：= < ret > rightVal < ; > | < ret > < ; >
-ReturnStmt: RET RightVal SEMICOLON
+ReturnStmt: RETURN RightVal SEMICOLON
 {
   $$ = A_ReturnStmt($1, $2);
 }
-| RET SEMICOLON
+| RETURN SEMICOLON
 {
   $$ = A_ReturnStmt($1, nullptr);
 }

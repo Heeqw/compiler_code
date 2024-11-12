@@ -64,4 +64,17 @@ int ast2llvmArithUExpr_first(aA_arithUExpr a);
 int ast2llvmArithExpr_first(aA_arithExpr a);
 int ast2llvmExprUnit_first(aA_exprUnit e);
 
+void ast2llvmVarDeclStmt(aA_varDeclStmt a);
+void ast2llvmAssignStmt(aA_assignStmt a);
+void ast2llvmCallStmt(aA_callStmt a);
+void ast2llvmIfStmt(aA_ifStmt a , Temp_label *con_label = nullptr, Temp_label *bre_label = nullptr);
+void ast2llvmWhileStmt(aA_whileStmt a);
+void ast2llvmReturnStmt(aA_returnStmt a);
+
+AS_operand* ast2llvmVarval(string id);
+AS_operand *ast2llvmArrayExpr(aA_arrayExpr a);
+AS_operand *ast2llvmMemberExpr(aA_memberExpr a);
+
+void enterScope();
+void exitScope();
 #endif
