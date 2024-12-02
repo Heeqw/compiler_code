@@ -22,6 +22,7 @@ struct Node {
     NodeSet succs;
     NodeSet preds;
     T info;
+    // 默认为0
     int color;
 
     Node() {}
@@ -65,6 +66,8 @@ class Graph {
 
     /* Tell if there is an edge from "from" to "to" */
     bool goesTo(Node<T>* from, Node<T>* n);
+
+    int findNode(T info);
 };
 
 template <typename T>
@@ -105,6 +108,9 @@ std::map<int, Node<T>*>* Graph<T>::nodes() {
     return &this->mynodes;
 }
 
+/**
+ *  新增节点note
+*/
 template <typename T>
 Node<T>* Graph<T>::addNode(T info) {
     Node<T>* node = new GRAPH::Node<T>(this->nodecount++, this, info, 0);
@@ -112,6 +118,9 @@ Node<T>* Graph<T>::addNode(T info) {
     return node;
 }
 
+/**
+ *  删除节点node
+*/
 template <typename T>
 void Graph<T>::rmNode(Node<T>* node) {
     assert(node->outDegree() == 0);
@@ -119,6 +128,9 @@ void Graph<T>::rmNode(Node<T>* node) {
     node->mygraph->mynodes.erase(node->mykey);
 }
 
+/**
+ *  加入一条从from到to的边
+*/
 template <typename T>
 void Graph<T>::addEdge(Node<T>* from, Node<T>* to) {
     assert(from);
@@ -131,6 +143,9 @@ void Graph<T>::addEdge(Node<T>* from, Node<T>* to) {
     from->succs.insert(to->mykey);
 }
 
+/**
+ *  移除从from到to的边
+*/
 template <typename T>
 void Graph<T>::rmEdge(Node<T>* from, Node<T>* to) {
     assert(from && to);
@@ -138,8 +153,28 @@ void Graph<T>::rmEdge(Node<T>* from, Node<T>* to) {
     from->succs.erase(from->succs.find(to->mykey));
 }
 
+/**
+ *  检查是否有一条从from到n的边
+ * @param from 起始点
+ * @param n 目标点
+*/
 template <typename T>
 bool Graph<T>::goesTo(Node<T>* from, Node<T>* n) {
     return from->succs.count(n->mykey);
 }
+
+
+/**
+ *  给定info找到对应的Node,返回nodeid
+*/
+template <typename T>
+int Graph<T>::findNode(T info){
+    for(auto pair:this->mynodes){
+        Node<T>* node = pair.second;
+        if(node->nodeInfo()==info)
+            return node->mykey;
+    }
+    return -1;
+}
+
 }  // namespace GRAPH

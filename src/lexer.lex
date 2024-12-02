@@ -8,20 +8,230 @@ int c;
 int calc(const char *s, int len);
 %}
 
-// TODO:
-// your lexer
+%start COMMENT1 COMMENT2
 
 %%
-<INITIAL>"\t" { col+=4; }
 <INITIAL>[1-9][0-9]* {
     yylval.tokenNum = A_TokenNum(A_Pos(line, col), calc(yytext, yyleng));
     col+=yyleng;
-    return NUM;
+    return UNUM;
 }
 <INITIAL>0 {
     yylval.tokenNum = A_TokenNum(A_Pos(line, col), 0);
     ++col;
-    return NUM;
+    return UNUM;
+}
+<INITIAL>"\t" { col+=4; }
+<INITIAL>" " { col+=1; }
+<INITIAL>"\n" { 
+    col=1;
+    line+=1; 
+}
+<INITIAL>"let" {
+    yylval.pos = A_Pos(line, col);
+    col+=3;
+    return LET;
+}
+<INITIAL>"int" {
+    yylval.pos = A_Pos(line, col);
+    col+=3;
+    return INT;
+}
+<INITIAL>"struct" {
+    yylval.pos = A_Pos(line, col);
+    col+=6;
+    return STRUCT;
+}
+<INITIAL>"fn" {
+    yylval.pos = A_Pos(line, col);
+    col+=2;
+    return FN;
+}
+<INITIAL>"ret" {
+    yylval.pos = A_Pos(line, col);
+    col+=3;
+    return RETURN;
+}
+<INITIAL>"break" {
+    yylval.pos = A_Pos(line, col);
+    col+=5;
+    return BREAK;
+}
+<INITIAL>"continue" {
+    yylval.pos = A_Pos(line, col);
+    col+=8;
+    return CONTINUE;
+}
+<INITIAL>"if" {
+    yylval.pos = A_Pos(line, col);
+    col+=2;
+    return IF;
+}
+<INITIAL>"else" {
+    yylval.pos = A_Pos(line, col);
+    col+=4;
+    return ELSE;
+}
+<INITIAL>"while" {
+    yylval.pos = A_Pos(line, col);
+    col+=5;
+    return WHILE;
+}
+<INITIAL>[a-z_A-Z][a-z_A-Z0-9]* {
+    yylval.tokenId = A_TokenId(A_Pos(line, col), strdup(yytext));
+    col+=yyleng;
+    return ID;
+}
+<INITIAL>"+" {
+    yylval.pos = A_Pos(line, col);
+    ++col;
+    return ADD;
+}
+<INITIAL>"-" {
+    yylval.pos = A_Pos(line, col);
+    ++col;
+    return SUB;
+}
+<INITIAL>"*" {
+    yylval.pos = A_Pos(line, col);
+    ++col;
+    return MUL;
+}
+<INITIAL>"/" {
+    yylval.pos = A_Pos(line, col);
+    ++col;
+    return DIV;
+}
+<INITIAL>";" {
+    yylval.pos = A_Pos(line, col);
+    ++col;
+    return SEMICOLON;
+}
+<INITIAL>"," {
+    yylval.pos = A_Pos(line, col);
+    ++col;
+    return COMMA;
+}
+<INITIAL>"." {
+    yylval.pos = A_Pos(line, col);
+    ++col;
+    return DOT;
+}
+<INITIAL>"->" {
+    yylval.pos = A_Pos(line, col);
+    col+=2;
+    return POINT;
+}
+<INITIAL>"&&" {
+    yylval.pos = A_Pos(line, col);
+    col+=2;
+    return AND;
+}
+<INITIAL>"||" {
+    yylval.pos = A_Pos(line, col);
+    col+=2;
+    return OR;
+}
+<INITIAL>"!" {
+    yylval.pos = A_Pos(line, col);
+    ++col;
+    return NOT;
+}
+<INITIAL>">" {
+    yylval.pos = A_Pos(line, col);
+    ++col;
+    return GT;
+}
+<INITIAL>"<" {
+    yylval.pos = A_Pos(line, col);
+    ++col;
+    return LT;
+}
+<INITIAL>">=" {
+    yylval.pos = A_Pos(line, col);
+    col+=2;
+    return GE;
+}
+<INITIAL>"<=" {
+    yylval.pos = A_Pos(line, col);
+    col+=2;
+    return LE;
+}
+<INITIAL>"==" {
+    yylval.pos = A_Pos(line, col);
+    col+=2;
+    return EQ;
+}
+<INITIAL>"!=" {
+    yylval.pos = A_Pos(line, col);
+    col+=2;
+    return NE;
+}
+<INITIAL>"=" {
+    yylval.pos = A_Pos(line, col);
+    ++col;
+    return ASS;
+}
+<INITIAL>":" {
+    yylval.pos = A_Pos(line, col);
+    ++col;
+    return COLON;
+}
+<INITIAL>"(" {
+    yylval.pos = A_Pos(line, col);
+    ++col;
+    return LPAREN;
+}
+<INITIAL>")" {
+    yylval.pos = A_Pos(line, col);
+    ++col;
+    return RPAREN;
+}
+<INITIAL>"[" {
+    yylval.pos = A_Pos(line, col);
+    ++col;
+    return LBRACKET;
+}
+<INITIAL>"]" {
+    yylval.pos = A_Pos(line, col);
+    ++col;
+    return RBRACKET;
+}
+<INITIAL>"{" {
+    yylval.pos = A_Pos(line, col);
+    ++col;
+    return LBRACE;
+}
+<INITIAL>"}" {
+    yylval.pos = A_Pos(line, col);
+    ++col;
+    return RBRACE;
+}
+<INITIAL>"//" {
+    BEGIN COMMENT1;
+}
+<INITIAL>"/*" {
+    col+=2;
+    BEGIN COMMENT2;
+}
+<COMMENT1>"\n" {
+    line+=1;
+    col=1;
+    BEGIN INITIAL;
+}
+<COMMENT1>.|\n ; 
+<COMMENT2>"*/" {
+    col+=2;
+    BEGIN INITIAL;
+}
+<COMMENT2>. {
+    if(yytext[0] == '\n'){
+        line++;
+        col=1;
+    }
+    else{
+        col++;
+    }
 }
 %%
 

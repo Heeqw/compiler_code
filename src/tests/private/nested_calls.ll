@@ -6,116 +6,120 @@ declare void @putarray( i32, i32* )
 declare void @_sysy_starttime( i32 )
 declare void @_sysy_stoptime( i32 )
 define i32 @func1( i32 %r100, i32 %r102, i32 %r104 ) {
-bb31:
-  %r271 = add i32 0, 0
-  %r274 = add i32 %r100, 0
-  %r272 = add i32 0, 0
-  %r275 = add i32 %r102, 0
-  %r273 = add i32 0, 0
-  %r276 = add i32 %r104, 0
-  br label %bb1
-
 bb1:
-  %r107 = icmp eq i32 %r276, 0
+  %r274 = add i32 0, 0
+  %r275 = add i32 %r100, 0
+  %r276 = add i32 0, 0
+  %r277 = add i32 %r102, 0
+  %r278 = add i32 0, 0
+  %r279 = add i32 %r104, 0
+  %r106 = add i32 %r279, 0
+  %r107 = icmp eq i32 %r279, 0
   br i1 %r107, label %bb2, label %bb3
 
 bb2:
-  %r110 = mul i32 %r274, %r275
+  %r108 = add i32 %r275, 0
+  %r109 = add i32 %r277, 0
+  %r110 = mul i32 %r275, %r277
   ret i32 %r110
 bb3:
-  %r114 = sub i32 %r275, %r276
-  %r115 = call i32 @func1(i32 %r274, i32 %r114, i32 0)
+  %r111 = add i32 %r275, 0
+  %r112 = add i32 %r277, 0
+  %r113 = add i32 %r279, 0
+  %r114 = sub i32 %r277, %r279
+  %r115 = call i32 @func1(i32 %r275, i32 %r114, i32 0)
   ret i32 %r115
 }
 
 define i32 @func2( i32 %r116, i32 %r118 ) {
-bb34:
-  %r277 = add i32 0, 0
-  %r279 = add i32 %r116, 0
-  %r278 = add i32 0, 0
-  %r280 = add i32 %r118, 0
-  br label %bb5
-
 bb5:
-  %r121 = icmp ne i32 %r280, 0
+  %r282 = add i32 0, 0
+  %r283 = add i32 %r116, 0
+  %r284 = add i32 0, 0
+  %r285 = add i32 %r118, 0
+  %r120 = add i32 %r285, 0
+  %r121 = icmp ne i32 %r285, 0
   br i1 %r121, label %bb6, label %bb7
 
 bb6:
-  %r125 = sdiv i32 %r279, %r280
-  %r127 = mul i32 %r125, %r280
-  %r128 = sub i32 %r279, %r127
+  %r122 = add i32 %r283, 0
+  %r123 = add i32 %r283, 0
+  %r124 = add i32 %r285, 0
+  %r125 = sdiv i32 %r283, %r285
+  %r126 = add i32 %r285, 0
+  %r127 = mul i32 %r125, %r285
+  %r128 = sub i32 %r283, %r127
   %r129 = call i32 @func2(i32 %r128, i32 0)
   ret i32 %r129
 bb7:
-  ret i32 %r279
+  %r130 = add i32 %r283, 0
+  ret i32 %r283
 }
 
 define i32 @func3( i32 %r131, i32 %r133 ) {
-bb37:
-  %r281 = add i32 0, 0
-  %r283 = add i32 %r131, 0
-  %r282 = add i32 0, 0
-  %r284 = add i32 %r133, 0
-  br label %bb9
-
 bb9:
-  %r136 = icmp eq i32 %r284, 0
+  %r288 = add i32 0, 0
+  %r289 = add i32 %r131, 0
+  %r290 = add i32 0, 0
+  %r291 = add i32 %r133, 0
+  %r135 = add i32 %r291, 0
+  %r136 = icmp eq i32 %r291, 0
   br i1 %r136, label %bb10, label %bb11
 
 bb10:
-  %r138 = add i32 %r283, 1
+  %r137 = add i32 %r289, 0
+  %r138 = add i32 %r289, 1
   ret i32 %r138
 bb11:
-  %r141 = add i32 %r283, %r284
+  %r139 = add i32 %r289, 0
+  %r140 = add i32 %r291, 0
+  %r141 = add i32 %r289, %r291
   %r142 = call i32 @func3(i32 %r141, i32 0)
   ret i32 %r142
 }
 
 define i32 @func4( i32 %r143, i32 %r145, i32 %r147 ) {
-bb40:
-  %r285 = add i32 0, 0
-  %r288 = add i32 %r143, 0
-  %r286 = add i32 0, 0
-  %r289 = add i32 %r145, 0
-  %r287 = add i32 0, 0
-  %r290 = add i32 %r147, 0
-  br label %bb13
-
 bb13:
-  %r150 = icmp ne i32 %r288, 0
+  %r295 = add i32 0, 0
+  %r296 = add i32 %r143, 0
+  %r297 = add i32 0, 0
+  %r298 = add i32 %r145, 0
+  %r299 = add i32 0, 0
+  %r300 = add i32 %r147, 0
+  %r149 = add i32 %r296, 0
+  %r150 = icmp ne i32 %r296, 0
   br i1 %r150, label %bb14, label %bb15
 
 bb14:
-  ret i32 %r289
+  %r151 = add i32 %r298, 0
+  ret i32 %r298
 bb15:
-  ret i32 %r290
+  %r152 = add i32 %r300, 0
+  ret i32 %r300
 }
 
 define i32 @func5( i32 %r153 ) {
-bb43:
-  %r291 = add i32 0, 0
-  %r292 = add i32 %r153, 0
-  br label %bb17
-
 bb17:
-  %r156 = sub i32 0, %r292
+  %r302 = add i32 0, 0
+  %r303 = add i32 %r153, 0
+  %r155 = add i32 %r303, 0
+  %r156 = sub i32 0, %r303
   ret i32 %r156
 }
 
 define i32 @func6( i32 %r157, i32 %r159 ) {
-bb44:
-  %r293 = add i32 0, 0
-  %r295 = add i32 %r157, 0
-  %r294 = add i32 0, 0
-  %r296 = add i32 %r159, 0
-  br label %bb18
-
 bb18:
-  %r162 = icmp ne i32 %r295, 0
+  %r306 = add i32 0, 0
+  %r307 = add i32 %r157, 0
+  %r308 = add i32 0, 0
+  %r309 = add i32 %r159, 0
+  %r161 = add i32 %r307, 0
+  %r162 = icmp ne i32 %r307, 0
   br i1 %r162, label %bb22, label %bb20
 
 bb22:
-  %r164 = icmp ne i32 %r296, 0
+  %r163 = add i32 %r309, 0
+  %r164 = icmp ne i32 %r309, 0
   br i1 %r164, label %bb19, label %bb20
 
 bb19:
@@ -125,13 +129,11 @@ bb20:
 }
 
 define i32 @func7( i32 %r165 ) {
-bb47:
-  %r297 = add i32 0, 0
-  %r298 = add i32 %r165, 0
-  br label %bb23
-
 bb23:
-  %r168 = icmp ne i32 %r298, 0
+  %r311 = add i32 0, 0
+  %r312 = add i32 %r165, 0
+  %r167 = add i32 %r312, 0
+  %r168 = icmp ne i32 %r312, 0
   br i1 %r168, label %bb25, label %bb24
 
 bb24:
@@ -142,39 +144,53 @@ bb25:
 
 define i32 @main( ) {
 bb27:
-  %r299 = add i32 0, 0
+  %r319 = add i32 0, 0
   call void @_sysy_starttime(i32 97)
-  %r300 = add i32 0, 0
-  %r305 = call i32 @getint()
-  %r301 = add i32 0, 0
-  %r306 = call i32 @getint()
-  %r302 = add i32 0, 0
-  %r307 = call i32 @getint()
-  %r303 = add i32 0, 0
-  %r308 = call i32 @getint()
+  %r320 = add i32 0, 0
+  %r170 = call i32 @getint()
+  %r321 = add i32 %r170, 0
+  %r322 = add i32 0, 0
+  %r172 = call i32 @getint()
+  %r323 = add i32 %r172, 0
+  %r324 = add i32 0, 0
+  %r174 = call i32 @getint()
+  %r325 = add i32 %r174, 0
+  %r326 = add i32 0, 0
+  %r176 = call i32 @getint()
+  %r327 = add i32 %r176, 0
   %r177 = alloca [ 10 x i32 ]
-  %r304 = add i32 0, 0
-  %r309 = add i32 0, 0
+  %r328 = add i32 0, 0
+  %r329 = add i32 0, 0
   br label %bb28
 
 bb28:
-  %r310 = phi i32 [ %r309, %bb27 ], [ %r312, %bb29 ]
-  %r180 = icmp slt i32 %r310, 10
+  %r334 = phi i32 [ %r329, %bb27 ], [ %r333, %bb29 ]
+  %r179 = add i32 %r334, 0
+  %r180 = icmp slt i32 %r334, 10
   br i1 %r180, label %bb29, label %bb30
 
 bb29:
-  %r181 = call i32 @getint()
-  %r183 = getelementptr [10 x i32 ], [10 x i32 ]* %r177, i32 0, i32 %r310
-  store i32 %r181, i32* %r183
-  %r312 = add i32 %r310, 1
+  %r332 = phi i32 [ %r334, %bb28 ]
+  %r181 = add i32 %r332, 0
+  %r182 = getelementptr [10 x i32 ], [10 x i32 ]* %r177, i32 0, i32 %r332
+  %r183 = call i32 @getint()
+  store i32 %r183, i32* %r182
+  %r184 = add i32 %r332, 0
+  %r185 = add i32 %r332, 1
+  %r333 = add i32 %r185, 0
   br label %bb28
 
 bb30:
-  %r188 = call i32 @func7(i32 %r305)
-  %r190 = call i32 @func5(i32 %r306)
+  %r330 = phi i32 [ %r334, %bb28 ]
+  %r187 = add i32 %r321, 0
+  %r188 = call i32 @func7(i32 %r321)
+  %r189 = add i32 %r323, 0
+  %r190 = call i32 @func5(i32 %r323)
   %r191 = call i32 @func6(i32 %r188, i32 %r190)
-  %r193 = call i32 @func2(i32 %r191, i32 %r307)
-  %r195 = call i32 @func3(i32 %r193, i32 %r308)
+  %r192 = add i32 %r325, 0
+  %r193 = call i32 @func2(i32 %r191, i32 %r325)
+  %r194 = add i32 %r327, 0
+  %r195 = call i32 @func3(i32 %r193, i32 %r327)
   %r196 = call i32 @func5(i32 %r195)
   %r197 = getelementptr [10 x i32 ], [10 x i32 ]* %r177, i32 0, i32 0
   %r198 = load i32, i32* %r197
@@ -206,11 +222,15 @@ bb30:
   %r224 = load i32, i32* %r223
   %r225 = call i32 @func7(i32 %r224)
   %r226 = call i32 @func3(i32 %r222, i32 %r225)
-  %r228 = call i32 @func1(i32 %r220, i32 %r226, i32 %r305)
+  %r227 = add i32 %r321, 0
+  %r228 = call i32 @func1(i32 %r220, i32 %r226, i32 %r321)
   %r229 = call i32 @func4(i32 %r196, i32 %r198, i32 %r228)
-  %r232 = call i32 @func7(i32 %r307)
-  %r234 = call i32 @func3(i32 %r232, i32 %r308)
-  %r235 = call i32 @func2(i32 %r306, i32 %r234)
+  %r230 = add i32 %r323, 0
+  %r231 = add i32 %r325, 0
+  %r232 = call i32 @func7(i32 %r325)
+  %r233 = add i32 %r327, 0
+  %r234 = call i32 @func3(i32 %r232, i32 %r327)
+  %r235 = call i32 @func2(i32 %r323, i32 %r234)
   %r236 = call i32 @func3(i32 %r229, i32 %r235)
   %r237 = getelementptr [10 x i32 ], [10 x i32 ]* %r177, i32 0, i32 0
   %r238 = load i32, i32* %r237
@@ -242,9 +262,12 @@ bb30:
   %r264 = load i32, i32* %r263
   %r265 = call i32 @func5(i32 %r264)
   %r266 = call i32 @func2(i32 %r262, i32 %r265)
-  %r268 = call i32 @func3(i32 %r266, i32 %r305)
-  %r311 = call i32 @func1(i32 %r244, i32 %r246, i32 %r268)
+  %r267 = add i32 %r321, 0
+  %r268 = call i32 @func3(i32 %r266, i32 %r321)
+  %r269 = call i32 @func1(i32 %r244, i32 %r246, i32 %r268)
+  %r331 = add i32 %r269, 0
   call void @_sysy_stoptime(i32 117)
-  ret i32 %r311
+  %r270 = add i32 %r331, 0
+  ret i32 %r331
 }
 

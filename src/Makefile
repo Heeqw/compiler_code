@@ -1,10 +1,8 @@
 CXX = clang++
 CXXFLAGS = -std=c++17 -g 
 
-TESTCASE_DIR := tests/public
-# TESTCASE_DIR := tests/end
-# TESTCASE_DIR := tests/end2
-# TESTCASE_DIR := tests/private
+# TESTCASE_DIR := tests/public
+TESTCASE_DIR := tests/private
 TESTCASES = $(wildcard $(TESTCASE_DIR)/*.tea)
 LLFILES = $(patsubst $(TESTCASE_DIR)/%.tea,$(TESTCASE_DIR)/%.ast,$(TESTCASES))
 
@@ -18,7 +16,7 @@ $(TESTCASE_DIR)/%.ll: $(TESTCASE_DIR)/%.tea compiler
 	@./test-functional.sh $*
 	@echo 
 
-compiler: y.tab.o lex.yy.o TeaplAst.o TeaplaAst.o PrintTeaplaAst.o compiler.o  llvm_ir.o ast2llvm.o printLLVM.o temp.o ssa.o bg_llvm.o liveness.o TypeCheck.o
+compiler: y.tab.o lex.yy.o TeaplAst.o TeaplaAst.o PrintTeaplaAst.o compiler.o  llvm_ir.o ast2llvm.o printLLVM.o temp.o ssa.o bg_llvm.o liveness.o
 	@$(CXX) $(CXXFLAGS) -o compiler $^ 
 
 y.tab.cpp: parser.yacc TeaplAst.h 
@@ -38,8 +36,8 @@ y.tab.o: y.tab.cpp y.tab.hpp
 lex.yy.o: lex.yy.cpp y.tab.hpp
 	@$(CXX) $(CXXFLAGS) -c $<
 
-TypeCheck.o: TypeCheck.cpp TypeCheck.h
-	$(CXX) $(CXXFLAGS) -c $<
+# TypeCheck.o: TypeCheck.cpp TypeCheck.h
+# 	$(CXX) $(CXXFLAGS) -c $<
 
 TeaplAst.o: TeaplAst.cpp TeaplAst.h
 	@$(CXX) $(CXXFLAGS) -c $<
@@ -75,4 +73,3 @@ liveness.o: liveness.cpp liveness.h  graph.hpp
 	@$(CXX) $(CXXFLAGS) -c $<
 clean:
 	rm -f *.o   compiler  tests/*.ll output/*.ll output/*.out tests/public/*.ll tests/private/*.ll
-
