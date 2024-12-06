@@ -50,13 +50,16 @@ int getMemLength(TempDef &members)
         return INT_LENGTH;
         break;
     case TempType::STRUCT_PTR:
-        // printf("%d\n", structLayout[members.structname]->size);
-        return structLayout[members.structname]->size * members.len;
+        if(structLayout.find(members.structname) != structLayout.end()) {
+            return structLayout[members.structname]->size * members.len;
+        }
+        assert(0);
         break;
     case TempType::STRUCT_TEMP:
-        // printf("%d\n", structLayout[members.structname]->size);
-
-        return structLayout[members.structname]->size;
+        if(structLayout.find(members.structname) != structLayout.end()) {
+            return structLayout[members.structname]->size;
+        }
+        assert(0);
         break;
     default:
         assert(0);
@@ -65,16 +68,64 @@ int getMemLength(TempDef &members)
 void structLayoutInit(vector<L_def *> &defs)
 {
     // TODO:存储结构体信息
+    // 遍历所有定义,找到结构体定义
+    for(auto def : defs) {
+        if(def->kind == L_DefKind::SRT) {
+            string struct_name = def->u.SRT->name;
+            vector<int> offsets;
+            int total_size = 0;
+            
+            for(auto member : def->u.SRT->members) {
+                offsets.push_back(total_size);
+                total_size += getMemLength(member);
+                // 对齐到8字节边界
+                total_size = (total_size + 7) & ~7;
+            }
+            
+            // 存储结构体信息
+            structLayout[struct_name] = new StructDef(offsets, total_size);
+        }
+    }
 }
 
 void set_stack(L_func &func)
 {
     // TODO: 记录局部变量在栈中的位置，设置fpOffset
     //  Fixme: add here
+    stack_frame = 0;
 
-    for (auto &x : fpOffset)
-    {
-        printf("%r %d %s\n", x.first, printAS_add(x.second).c_str());
+    
+
+    // 提前为alloca分配空间
+    for(L_block* block : func.blocks) {
+        for(L_stm* stm : block->instrs) {
+            if(stm->type == L_StmKind::T_ALLOCA) {
+                AS_operand* alloca_dst = stm->u.ALLOCA->dst;
+
+                if(alloca_dst->kind != OperandKind::TEMP) {
+                    assert(0);
+                }
+
+                if(alloca_dst->u.TEMP->type == TempType::INT_PTR) {
+                    if(alloca_dst->u.TEMP->len <= 0)
+                        assert(0);
+                    stack_frame += INT_LENGTH * alloca_dst->u.TEMP->len;
+                } 
+                else if(alloca_dst->u.TEMP->type == TempType::STRUCT_PTR) {
+                    int len = alloca_dst->u.TEMP->len;
+                    if(alloca_dst->u.TEMP->len <= 0)
+                        len = 1;
+                    int struct_size = structLayout[alloca_dst->u.TEMP->structname]->size;
+                    stack_frame += struct_size * len;
+                }
+                else {
+                    assert(0);
+                }
+                
+                AS_address* address = new AS_address(new AS_reg(AS_type::Xn, XnFP), -stack_frame);
+                fpOffset[alloca_dst->u.TEMP->num] = address;
+            }
+        }
     }
 }
 
@@ -82,58 +133,52 @@ void new_frame(list<AS_stm *> &as_list, L_func &func)
 {
     // Fixme: add here
     // TODO: 调整栈指针
+    // 1. 调整栈指针
+    as_list.emplace_back(AS_Mov(new AS_reg(AS_type::IMM, stack_frame), 
+                               new AS_reg(AS_type::Xn, XXn1)));
+    as_list.emplace_back(AS_Binop(AS_binopkind::SUB_, sp, 
+                                 new AS_reg(AS_type::Xn, XXn1), sp));
 
-    // 取得函数参数并存入虚拟寄存器
-    int i = 0;
-
-    for (int i = 0; i < 8 && i < func.args.size(); i++)
-    {
-        switch (func.args[i]->type)
-        {
-        case TempType::INT_TEMP:
-            as_list.emplace_back(AS_Mov(new AS_reg(AS_type::Wn, i), new AS_reg(AS_type::Wn, func.args[i]->num)));
-            break;
-
-        case TempType::INT_PTR:
-        case TempType::STRUCT_PTR:
-        case TempType::STRUCT_TEMP:
-            as_list.emplace_back(AS_Mov(new AS_reg(AS_type::Xn, i), new AS_reg(AS_type::Xn, func.args[i]->num)));
-            break;
-
-        default:
-            break;
+    // 2. 处理前8个参数（寄存器传递）
+    for (int i = 0; i < 8 && i < func.args.size(); i++) {
+        switch (func.args[i]->type) {
+            case TempType::INT_TEMP:
+                as_list.emplace_back(AS_Mov(new AS_reg(AS_type::Wn, i), 
+                                          new AS_reg(AS_type::Wn, func.args[i]->num)));
+                break;
+                
+            case TempType::INT_PTR:
+            case TempType::STRUCT_PTR:
+            case TempType::STRUCT_TEMP:
+                as_list.emplace_back(AS_Mov(new AS_reg(AS_type::Xn, i), 
+                                          new AS_reg(AS_type::Xn, func.args[i]->num)));
+                break;
+                
+            default:
+                assert(0);
         }
     }
+
+    // 3. 处理栈上的参数（第8个之后）
     int offset = 0;
-    for (int i = 8; i < func.args.size(); i++)
-    {
-        AS_type type;
-        switch (func.args[i]->type)
-        {
-        case TempType::INT_TEMP:
-            type = AS_type::Wn;
-            break;
-
-        case TempType::INT_PTR:
-        case TempType::STRUCT_PTR:
-        case TempType::STRUCT_TEMP:
-            type = AS_type::Xn;
-            break;
-
-        default:
-            break;
-        }
-        auto tep = new AS_reg(type, Temp_newtemp_int()->num);
-        as_list.emplace_back(AS_Ldr(tep, new AS_reg(AS_type::ADR, new AS_address(new AS_reg(AS_type::Xn, FPR), offset))));
-        offset += 8;
-        as_list.emplace_back(AS_Mov(tep, new AS_reg(type, func.args[i]->num)));
+    for (int i = 8; i < func.args.size(); i++) {
+        AS_type type = (func.args[i]->type == TempType::INT_TEMP) ? AS_type::Wn : AS_type::Xn;
+        
+        auto temp = new AS_reg(type, Temp_newtemp_int()->num);
+        as_list.emplace_back(AS_Ldr(temp, 
+                                   new AS_reg(AS_type::ADR, 
+                                   new AS_address(new AS_reg(AS_type::Xn, XnFP), offset))));
+        offset += 8;  // ARM64中栈上参数都是8字节对齐
+        as_list.emplace_back(AS_Mov(temp, new AS_reg(type, func.args[i]->num)));
     }
 }
 
 void free_frame(list<AS_stm *> &as_list)
 {
     // TODO:调整sp指针
+    as_list.emplace_back(AS_Mov(new AS_reg(AS_type::Xn, XnFP), sp));
 }
+
 void allignPtr(AS_reg *&op_reg, AS_operand *as_operand, list<AS_stm *> &as_list)
 {
     switch (as_operand->kind)
@@ -177,6 +222,7 @@ void allignPtr(AS_reg *&op_reg, AS_operand *as_operand, list<AS_stm *> &as_list)
     // printf("%s\n", printAS_reg(op_reg).c_str());
 }
 
+// TODO
 void llvm2asmBinop(list<AS_stm *> &as_list, L_stm *binop_stm)
 {
 }

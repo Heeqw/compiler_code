@@ -22,4 +22,7 @@ void Rename(GRAPH::Graph<LLVMIR::L_block*>& bg);
 void printf_domi();
 void printf_D_tree();
 void printf_DF();
+
+template <typename T>
+std::unordered_set<T> make_intersection(std::unordered_set<T> &tl1, std::unordered_set<T> &tl2);
 #endif
